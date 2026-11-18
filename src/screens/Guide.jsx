@@ -1,7 +1,7 @@
 import { useStore } from '../store.jsx';
 import { AISLES, STORE, aisleLabel } from '../lib/catalog.js';
 import { buildList, nok } from '../lib/meal.js';
-import { Icon, ProductThumb, navigate, TopBar, DemoNote } from '../components/ui.jsx';
+import { Icon, ProductThumb, navigate, TopBar, DemoNote, Price } from '../components/ui.jsx';
 
 // Simple floor plan. Coordinates are illustrative.
 const MAP = {
@@ -74,7 +74,7 @@ export default function Guide() {
 
   return (
     <div className="guide">
-      <TopBar title="Aisle guide" right={<button className="icon-btn" onClick={() => navigate('/list')} aria-label="Shopping list"><Icon name="list" /></button>} />
+      <TopBar title="Aisle guide" right={<button className="icon-btn on-dark" onClick={() => navigate('/list')} aria-label="Shopping list"><Icon name="list" /></button>} />
       <div className="pad">
         <div className="progress-card">
           <div className="progress-top">
@@ -82,7 +82,7 @@ export default function Guide() {
               <strong className="left-count">{leftItems.length === 0 ? 'All done!' : `${leftItems.length} ${leftItems.length === 1 ? 'item' : 'items'} left`}</strong>
               <span className="muted small">{doneCount} of {items.length} found · {STORE.name}</span>
             </div>
-            <span className="big-price sm">{nok(list.total)}</span>
+            <Price value={list.total} />
           </div>
           <div className="bar" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100}><span style={{ width: `${pct}%` }} /></div>
           {nextGroup ? (

@@ -1,7 +1,7 @@
 import { useStore } from '../store.jsx';
 import { recipeById, productById, aisleShort } from '../lib/catalog.js';
 import { buildList, computeMeal, nok } from '../lib/meal.js';
-import { Icon, MealImage, ProductThumb, navigate, TopBar, DemoNote } from '../components/ui.jsx';
+import { Icon, MealImage, ProductThumb, navigate, TopBar, DemoNote, Price } from '../components/ui.jsx';
 
 export default function List() {
   const { state, dispatch, planOf } = useStore();
@@ -29,7 +29,7 @@ export default function List() {
         <div className="list-summary">
           <div>
             <span className="label">Shopping total</span>
-            <span className="big-price">{nok(list.total)}</span>
+            <Price value={list.total} className="lg" />
             <span className="small muted">{list.items.length} products · {left.length} left to find</span>
           </div>
           <button className="btn btn-primary" onClick={() => navigate('/guide')} disabled={!list.items.length}>

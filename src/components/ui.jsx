@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { recipeById, productById, aisleShort } from '../lib/catalog.js';
-import { nok } from '../lib/meal.js';
+import { recipeById, productById, aisleShort, STORE } from '../lib/catalog.js';
+import { nok, buildList } from '../lib/meal.js';
+import { useStore } from '../store.jsx';
 
 export function navigate(to) {
   if (location.hash !== `#${to}`) location.hash = to;
@@ -38,6 +39,8 @@ const paths = {
   info: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 11v5M12 8h.01',
   chevron: 'M9 6l6 6-6 6',
   down: 'M6 9l6 6 6-6',
+  basket: 'M3 9h18l-2 11H5zM8 9l4-6 4 6M9 13v4M12 13v4M15 13v4',
+  search: 'M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM20 20l-4-4',
   barcode: 'M4 6v12M7 6v12M10 6v12M13 6v12M17 6v12M20 6v12',
 };
 
@@ -83,8 +86,8 @@ export function MealCard({ card, onOpen }) {
           {card.vegetarian && <span className="veg"><Icon name="leaf" size={15} /> Veg</span>}
         </div>
         <div className="meal-card-price">
-          <span className="price">{nok(card.total)}</span>
-          <span className="sub">est. checkout</span>
+          <Price value={card.total} />
+          <span className="sub">{nok(card.total / card.servings)} per serving</span>
         </div>
       </div>
     </button>
@@ -129,20 +132,52 @@ export function Rich({ text }) {
   );
 }
 
-export function TopBar({ title, back = true, right }) {
+// Coop-app style header: photo banner, centred white title,
+// store + opening hours, and a green basket pill with the list total.
+export function TopBar({ title, back = true, right, image = '/img/header.jpg', tall = false }) {
+  const { state } = useStore();
+  const list = buildList(state.plans, state.listMeals, state.extras);
   return (
-    <header className="topbar">
-      {back ? (
-        <button className="icon-btn" onClick={() => (history.length > 1 ? history.back() : navigate('/home'))} aria-label="Back">
-          <Icon name="back" />
+    <header className={`banner ${tall ? 'tall' : ''}`} style={{ '--banner-img': `url(${image})` }}>
+      <div className="banner-row">
+        {back ? (
+          <button className="icon-btn on-dark" onClick={() => (history.length > 1 ? history.back() : navigate('/home'))} aria-label="Back">
+            <Icon name="back" />
+          </button>
+        ) : (
+          <span style={{ width: 44 }} />
+        )}
+        <h1 className="banner-title">{title}</h1>
+        <div className="topbar-right">{right || <span style={{ width: 44 }} />}</div>
+      </div>
+      <div className="banner-meta">
+        <span><Icon name="pin" size={17} /> {STORE.area.split(',')[0]}</span>
+        <span><Icon name="clock" size={17} /> {STORE.hours.replace('Open today ', 'Today ')}</span>
+        <button className="basket-pill" onClick={() => navigate('/list')} aria-label={`Shopping list, ${nok(list.total)}`}>
+          <Icon name="basket" size={18} />
+          <Price value={list.total} small />
         </button>
-      ) : (
-        <span style={{ width: 44 }} />
-      )}
-      <h1 className="topbar-title">{title}</h1>
-      <div className="topbar-right">{right || <span style={{ width: 44 }} />}</div>
+      </div>
     </header>
   );
+}
+
+// "141²⁰" style price like the Coop app.
+export function Price({ value, small = false, className = '' }) {
+  const kr = Math.floor(value + 1e-9);
+  const ore = String(Math.round((value - kr) * 100)).padStart(2, '0');
+  return (
+    <span className={`ptag ${small ? 'sm' : ''} ${className}`} aria-label={nok(value)}>
+      {kr}
+      <sup>{ore}</sup>
+    </span>
+  );
+}
+
+export function unitPrice(p) {
+  if (p.unit === 'g') return `${nok(p.price / (p.size / 1000))} per kg`;
+  if (p.unit === 'ml') return `${nok(p.price / (p.size / 1000))} per litre`;
+  return p.size > 1 ? `${nok(p.price / p.size)} per piece` : '';
 }
 
 export function DemoNote({ children }) {

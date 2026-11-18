@@ -5,6 +5,7 @@ import { mkdir, writeFile, access } from 'node:fs/promises';
 
 const U = (id) => `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=900&q=70`;
 const PHOTOS = {
+  header: ['1542838132-92c53300491e', '1604719312566-8912e9227c6a', '1534723452862-4c874018d66d'],
   'chickpea-curry': ['1565557623262-b51c2513a641', '1631292784640-2b24be784d5d', '1585937421612-70a008356fbe'],
   'tomato-mozzarella-pasta': ['1621996346565-e3dbc646d9a9', '1473093295043-cdd812d0e601', '1551183053-bf91a1d81141'],
   shakshuka: ['1590412200988-a436970781fa', '1608039829572-78524f79c4c7', '1525351484163-7529414344d8'],

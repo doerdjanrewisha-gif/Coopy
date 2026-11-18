@@ -90,7 +90,7 @@ export default function Share() {
 
   return (
     <div className="share">
-      <TopBar title="Share Coopy" back={false} />
+      <TopBar title="Share & about" back={false} />
       <div className="pad">
         <section className="qr-card">
           <h2>Scan to try Coopy</h2>

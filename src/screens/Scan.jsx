@@ -4,7 +4,7 @@ import { PRODUCTS, productById, aisleLabel, SAMPLE_SCANS, recipeById } from '../
 import { nok } from '../lib/meal.js';
 import { ask } from '../lib/assistant.js';
 import { shortName } from '../lib/engine.js';
-import { Icon, Rich, TopBar, DemoNote } from '../components/ui.jsx';
+import { Icon, Rich, TopBar, DemoNote, Price, unitPrice } from '../components/ui.jsx';
 import { openCard } from './Chat.jsx';
 import { canListen, listenWithFallback, speak, stopSpeaking } from '../lib/speech.js';
 
@@ -97,7 +97,7 @@ export default function Scan() {
 
   return (
     <div className="scan-screen">
-      <TopBar title="Scan & Talk" back={false} />
+      <TopBar title="In store · Scan & Talk" back={false} />
       <div className="pad">
         <p className="muted small center">How Coopy could work on a store handheld scanner. Same assistant, same store data.</p>
 
@@ -128,7 +128,7 @@ export default function Scan() {
                     <span>{product.packLabel} · EAN {eanOf(product)}</span>
                   </div>
                 </div>
-                <div className="sr-price">{nok(product.price)}</div>
+                <div className="sr-price"><Price value={product.price} className="xl" /><span className="sr-unit">{unitPrice(product)}</span></div>
                 <div className="sr-aisle"><Icon name="pin" size={16} /> {aisleLabel(product)}</div>
                 <div className={`sr-stock ${product.stock}`}>{product.stock === 'low' ? 'Few left in store' : 'In stock'}{product.vegan ? ' · Vegan' : product.veg ? ' · Vegetarian' : ''}</div>
 

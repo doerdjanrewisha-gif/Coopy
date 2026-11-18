@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useStore } from '../store.jsx';
 import { recipeById, productById, aisleLabel } from '../lib/catalog.js';
 import { computeMeal, nok, formatAmount } from '../lib/meal.js';
-import { Icon, MealImage, ProductThumb, navigate, DemoNote } from '../components/ui.jsx';
+import { Icon, MealImage, ProductThumb, navigate, DemoNote, Price, unitPrice } from '../components/ui.jsx';
 
 function buyText(packs, p) {
   if (/^1 /.test(p.packLabel)) {
@@ -63,8 +63,8 @@ export default function Meal({ id }) {
         <div className="total-box">
           <div>
             <span className="label">Shopping total</span>
-            <span className="big-price">{nok(meal.total)}</span>
-            <span className="small muted">Full packs · {toBuyCount} of {meal.lines.length} items to buy</span>
+            <Price value={meal.total} className="lg" />
+            <span className="small muted">{nok(meal.total / cfg.servings)} per serving · full packs · {toBuyCount} of {meal.lines.length} items to buy</span>
           </div>
           <div className="servings" aria-label="Servings">
             <span className="label">Servings</span>
@@ -90,12 +90,12 @@ export default function Meal({ id }) {
                 <ProductThumb product={l.product} />
                 <div className="ing-info">
                   <strong>{l.product.name}</strong>
-                  <span className="need">Recipe needs {formatAmount(l.needed, l.product)}</span>
+                  <span className="need">Recipe needs {formatAmount(l.needed, l.product)}{unitPrice(l.product) ? ` · ${unitPrice(l.product)}` : ''}</span>
                   <span className="buy">
                     {l.have ? 'At home · not included' : `Buy ${buyText(l.packs, l.product)} · ${nok(l.product.price)} each`}
                   </span>
                 </div>
-                <span className={`ing-price ${l.have ? 'struck' : ''}`}>{nok(l.packCost)}</span>
+                <span className={`ing-price ${l.have ? 'struck' : ''}`}><Price value={l.packCost} /></span>
               </div>
               <div className="ing-aisle"><Icon name="pin" size={14} /> {aisleLabel(l.product)}</div>
               <div className="ing-actions">

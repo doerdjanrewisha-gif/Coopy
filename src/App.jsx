@@ -75,9 +75,12 @@ export default function App() {
         <nav className="tabbar" aria-label="Main">
           <Tab icon="home" label="Home" active={tab === 'home'} to="/home" />
           <Tab icon="chat" label="Coopy" active={tab === 'chat'} to="/chat" />
-          <Tab icon="barcode" label="Scan & Talk" active={tab === 'scan'} to="/scan" />
-          <Tab icon="cart" label="List" active={tab === 'list'} to="/list" badge={left || null} />
-          <Tab icon="share" label="Share" active={tab === 'share'} to="/share" />
+          <button className={`tab tab-center ${tab === 'scan' ? 'active' : ''}`} onClick={() => navigate('/scan')} aria-current={tab === 'scan' ? 'page' : undefined}>
+            <span className="center-btn"><Icon name="scan" size={24} /></span>
+            <span className="tab-label">In store</span>
+          </button>
+          <Tab icon="basket" label="List" active={tab === 'list'} to="/list" badge={left || null} />
+          <Tab icon="more" label="More" active={tab === 'share'} to="/share" />
         </nav>
       )}
     </div>
@@ -88,7 +91,7 @@ function Tab({ icon, label, active, to, badge }) {
   return (
     <button className={`tab ${active ? 'active' : ''}`} onClick={() => navigate(to)} aria-current={active ? 'page' : undefined}>
       <span className="tab-icon">
-        <Icon name={icon} size={24} />
+        <Icon name={icon} size={24} stroke={icon === 'more' ? 3.2 : 1.8} />
         {badge ? <span className="badge">{badge}</span> : null}
       </span>
       <span className="tab-label">{label}</span>
