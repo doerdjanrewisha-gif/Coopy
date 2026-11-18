@@ -57,3 +57,16 @@ npm run build:offline  # build without downloading photos
 
 Meal photos are downloaded from Unsplash at build time. If a download fails, the app shows an
 illustrated placeholder instead.
+
+## Demo video
+
+`scripts/demo-video/` records a 1920×1080 walkthrough with step captions (Playwright + ffmpeg):
+
+```bash
+npm run build && npx vite preview --port 4173 &
+(cd scripts/demo-video && python3 -m http.server 4174 &)
+node scripts/demo-video/record.cjs http://localhost:4173/   # or your public https://…vercel.app/ URL
+ffmpeg -i scripts/demo-video/page@*.webm -c:v libx264 -crf 18 -pix_fmt yuv420p coopy-demo.mp4
+```
+
+Passing the public URL records the live site, with the real store and meal photos.
